@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5F9A14B9-F379-48BF-BDA9-38B366BC445B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PauthorLib</RootNamespace>
+    <AssemblyName>PauthorLib</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DeepZoomTools">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DeepZoomTools.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\ICollectionDefinition.cs" />
+    <Compile Include="Core\IReadOnlyPivotList.cs" />
+    <Compile Include="Core\PivotCollection.cs" />
+    <Compile Include="Core\PivotFacetCategory.cs" />
+    <Compile Include="Core\PivotFacetSortOrder.cs" />
+    <Compile Include="Core\PivotFacetType.cs" />
+    <Compile Include="Core\PivotImage.cs" />
+    <Compile Include="Core\PivotItem.cs" />
+    <Compile Include="Core\PivotLink.cs" />
+    <Compile Include="Core\PivotList.cs" />
+    <Compile Include="Crawling\XPathHelper.cs" />
+    <Compile Include="Imaging\HtmlImageCreator.cs" />
+    <Compile Include="Imaging\ImageCreator.cs" />
+    <Compile Include="Imaging\UnDeepZoomImageCreator.cs" />
+    <Compile Include="PauthorException.cs" />
+    <Compile Include="PauthorLog.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Streaming\Filters\DeepZoomTargetFilter.cs" />
+    <Compile Include="Streaming\Filters\HtmlImageCreationSourceFilter.cs" />
+    <Compile Include="Streaming\Filters\PivotCollectionSourceFilter.cs" />
+    <Compile Include="Streaming\Filters\PivotCollectionTargetFilter.cs" />
+    <Compile Include="Streaming\Filters\SourceImageCopyTargetFilter.cs" />
+    <Compile Include="Streaming\Filters\SourceToTargetFilterAdapter.cs" />
+    <Compile Include="Streaming\Filters\UnDeepZoomSourceFilter.cs" />
+    <Compile Include="Streaming\ILocalCollectionSource.cs" />
+    <Compile Include="Streaming\ILocalCollectionTarget.cs" />
+    <Compile Include="Streaming\IPivotCollectionSource.cs" />
+    <Compile Include="Streaming\IPivotCollectionTarget.cs" />
+    <Compile Include="Streaming\LocalCxmlCollectionSource.cs" />
+    <Compile Include="Streaming\LocalCxmlCollectionTarget.cs" />
+    <Compile Include="Streaming\NullCollectionSource.cs" />
+    <Compile Include="Streaming\NullCollectionTarget.cs" />
+    <Compile Include="Streaming\OleDb\CsvCollectionSource.cs" />
+    <Compile Include="Streaming\OleDb\CsvCollectionTarget.cs" />
+    <Compile Include="Streaming\OleDb\ExcelCollectionSource.cs" />
+    <Compile Include="Streaming\OleDb\ExcelCollectionTarget.cs" />
+    <Compile Include="Streaming\OleDb\OleDbCollectionSource.cs" />
+    <Compile Include="Streaming\OleDb\OleDbCollectionTarget.cs" />
+    <Compile Include="Streaming\OleDb\OleDbSchemaConstants.cs" />
+    <Compile Include="Streaming\PivotCollectionBuffer.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

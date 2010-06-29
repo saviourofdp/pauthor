@@ -1,0 +1,139 @@
+﻿#
+# Pauthor - An authoring library for Pivot collections
+# http://getpivot.com
+#
+# Copyright (c) 2010, by Microsoft Corporation
+# All rights reserved.
+#
+
+#using PauthorLib
+
+pauthor-program = {
+    _class = Microsoft.LiveLabs.Pauthor.CLI.PauthorProgram;
+    HelpText = @help-text;
+    Run = [ @arg-list ];
+};
+
+help-text = "
+Pauthor.exe /source <format> <file>
+           [/html-template <template file>]
+            /target <format> <file>
+
+Converts a Pivot collection from one format to another.  If the /html-template
+argument is provided, then the image for each item will be replaced with a new
+image based upon the given template. The same formats are available for both
+input and output:
+
+    csv        A collection specified in a CSV format. Images should be local
+               paths relative to the csv file itself. See the User's Guide for
+               full details.
+               
+    excel      A collection in an Excel spreadsheet. Images should be local
+               paths relative to the Excel file itself. See the User's Guide for
+               full details.
+
+    cxml       A collection formatted in a CXML file whose images are normal
+               image files on the local machine.
+               
+    deepzoom   A collection formatted in a CXML file whose images have been
+               converted into DeepZoom artifacts (i.e., DZC files, DZI files,
+               and image pyramids). This is the only format which can be read
+               directly by Pivot.
+
+For example, if you had a CSV file which you wanted to convert into a Pivot-
+readble collection, you would use the following command:
+
+        Pauthor.exe /source csv file.csv /target deepzoom file.cxml
+
+If you decided to make some changes and wanted to convert the collection to an
+Excel spreadsheet to work on it, you could use the following command:
+
+        Pauthor.exe /source deepzoom file.cxml /target excel file.xlsx
+
+Having finished your changes, you decide that you would like to add some visuals
+for each item and convert it back into a proper collection.  You could then use
+this command:
+
+        Pauthor.exe /source excel file.xlsx /html-template template.htm
+            /target deepzoom file.cxml
+";
+
+########################################################################################################################
+## Sources
+
+cxml-source = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.LocalCxmlCollectionSource;
+    _constructor = [ @args.source.1 ];
+};
+
+deepzoom-source = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.UnDeepZoomSourceFilter;
+    _constructor = [ @cxml-source ];
+};
+
+excel-source = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.OleDb.ExcelCollectionSource;
+    _constructor = [ @args.source.1 ];
+};
+
+csv-source = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.OleDb.CsvCollectionSource;
+    _constructor = [ @args.source.1 ];
+};
+
+########################################################################################################################
+## Targets
+
+cxml-target = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.SourceImageCopyTargetFilter;
+    _constructor = [
+        {
+            _class = Microsoft.LiveLabs.Pauthor.Streaming.LocalCxmlCollectionTarget;
+            _constructor = [ @args.target.1 ];
+        }
+    ];
+};
+
+deepzoom-target = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.DeepZoomTargetFilter;
+    _constructor = [
+        {
+            _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.SourceImageCopyTargetFilter;
+            _constructor = [
+                {
+                    _class = Microsoft.LiveLabs.Pauthor.Streaming.LocalCxmlCollectionTarget;
+                    _constructor = [ @args.target.1 ];
+                }
+            ];
+            OnlyCopyCollectionImages = true;
+        }
+    ];
+};
+
+excel-target = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.SourceImageCopyTargetFilter;
+    _constructor = [
+        {
+            _class = Microsoft.LiveLabs.Pauthor.Streaming.OleDb.ExcelCollectionTarget;
+            _constructor = [ @args.target.1 ];
+        }
+    ];
+};
+
+csv-target = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.SourceImageCopyTargetFilter;
+    _constructor = [
+        {
+            _class = Microsoft.LiveLabs.Pauthor.Streaming.OleDb.CsvCollectionTarget;
+            _constructor = [ @args.target.1 ];
+        }
+    ];
+};
+
+########################################################################################################################
+## Filters
+
+html-template-filter = {
+    _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.HtmlImageCreationSourceFilter;
+    HtmlTemplatePath = @args.html-template.0;
+};

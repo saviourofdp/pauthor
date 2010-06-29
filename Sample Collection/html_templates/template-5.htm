@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <style>
+            body {
+                margin: 0px;
+				padding: 40px 25px 25px 25px;
+				font-family:Arial, Helvetica, sans-serif;
+            }
+
+			.ContentRow{
+				float:left;
+				clear:both;
+				width:1150px;
+			}
+            .ImageContent {
+                width: 1150px; 
+				height: 600px;
+				margin-bottom:25px;
+				float:left;
+				clear:both;
+				overflow:hidden;
+				background-color:#CCC;
+            }
+
+            	
+			.Title{
+				float:left;
+				clear:both;
+				font-size:70px;
+				width:100%;
+				height:140px;
+				margin-bottom:20px;
+			}
+			
+			.Description{
+				float:left;
+				clear:both;
+				font-size:30px;
+				margin-bottom:25px;
+				width:100%;
+			}
+			.Details{
+				float: left;
+				clear:both;
+				width:100%;
+				font-size:20px;
+				color:#555555;
+				overflow:hidden;
+				margin-bottom:25px;
+
+			}
+			.Details td{
+				border-bottom:#666666 solid 1px;
+				padding:5px;
+				font-size:30px;
+			}
+			.RelatedLinks {
+				position:absolute;
+				left:25px;
+				bottom:25px;
+				width:100%;
+				white-space: nowrap;
+				overflow:hidden;
+				font-size:20px;	
+				color:#6dcff6;
+			}
+			
+        .facetHeader {
+			color: #000000;
+			width:40%;
+		}
+        </style>
+</head>
+    <body>
+    <div class="ImageContent">
+    	<img src="{image}" />
+    </div>
+    <div class="Title">{name}</div>    
+  <div class = "ContentRow">
+        <div class="Description">{description}</div>     
+        <div class="Details">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="facetHeader">Group</td>
+                    <td>{group}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Size</td>
+                    <td>{size}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Popularity</td>
+                    <td>{popularity}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Temperament</td>
+                    <td>{temperament}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Exercise Needs</td>
+                    <td>{Exercise Needs}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Approx. Life Span</td>
+                    <td>{Approx. Life Span}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Grooming</td>
+                    <td>{grooming}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Coat Length</td>
+                    <td>{coat Length}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">Hypo Allergenic</td>
+                    <td>{Hypo Allergenic}</td>
+                </tr>
+                <tr>
+                    <td class="facetHeader">AKC Recognized In</td>
+                    <td>{AKC Recognized In}</td>
+                </tr>
+            </table>
+        </div>
+    </div>    
+</body>
+</html>
