@@ -1,4 +1,12 @@
-﻿using System;
+﻿//
+// Pauthor - An authoring library for Pivot collections
+// http://pauthor.codeplex.com
+//
+// This source code is released under the Microsoft Code Sharing License.
+// For full details, see: http://pauthor.codeplex.com/license
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

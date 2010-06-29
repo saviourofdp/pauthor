@@ -1,9 +1,9 @@
 ﻿//
 // Pauthor - An authoring library for Pivot collections
-// http://getpivot.com
+// http://pauthor.codeplex.com
 //
-// Copyright (c) 2010, by Microsoft Corporation
-// All rights reserved.
+// This source code is released under the Microsoft Code Sharing License.
+// For full details, see: http://pauthor.codeplex.com/license
 //
 
 using System;
@@ -51,7 +51,7 @@ namespace Microsoft.LiveLabs.RssCrawler
             get { return this.CachedCollectionData.Copyright; }
         }
 
-        public IEnumerable<PivotFacetCategory> FacetCategories
+        public IReadablePivotList<String, PivotFacetCategory> FacetCategories
         {
             get { return this.CachedCollectionData.FacetCategories; }
         }
@@ -101,9 +101,9 @@ namespace Microsoft.LiveLabs.RssCrawler
         private PivotCollection DownloadCollectionData()
         {
             PivotCollection collection = new PivotCollection();
-            collection.AddFacetCategory(new PivotFacetCategory("Author", PivotFacetType.String));
-            collection.AddFacetCategory(new PivotFacetCategory("Category", PivotFacetType.String));
-            collection.AddFacetCategory(new PivotFacetCategory("Date", PivotFacetType.DateTime));
+            collection.FacetCategories.Add(new PivotFacetCategory("Author", PivotFacetType.String));
+            collection.FacetCategories.Add(new PivotFacetCategory("Category", PivotFacetType.String));
+            collection.FacetCategories.Add(new PivotFacetCategory("Date", PivotFacetType.DateTime));
 
             XPathHelper document = null;
             using (WebClient webClient = new WebClient())
@@ -136,7 +136,7 @@ namespace Microsoft.LiveLabs.RssCrawler
             int index = 0;
             foreach (XPathHelper itemNode in document.FindNodes("//item"))
             {
-                PivotItem item = new PivotItem(index.ToString());
+                PivotItem item = new PivotItem(index.ToString(), this);
 
                 String value = null;
                 if (itemNode.TryFindString("title", out value))
@@ -156,22 +156,20 @@ namespace Microsoft.LiveLabs.RssCrawler
 
                 if (itemNode.TryFindString("author", out value))
                 {
-                    item.AddFacetValue("Author", value, false);
+                    item.AddFacetValues("Author", value);
                 }
 
-                PivotFacetCategory facetCategory = this.CachedCollectionData.GetFacetCategory("Category");
                 foreach (XPathHelper categoryNode in itemNode.FindNodes("category"))
                 {
-                    item.AddFacetValue(facetCategory, categoryNode.FindString("."));
+                    item.AddFacetValues("Category", categoryNode.FindString("."));
                 }
 
-                facetCategory = this.CachedCollectionData.GetFacetCategory("Date");
                 if (itemNode.TryFindString("pubDate", out value))
                 {
                     DateTime dateValue = DateTime.Now;
                     if (DateTime.TryParse(value, out dateValue))
                     {
-                        item.AddFacetValue(facetCategory, dateValue);
+                        item.AddFacetValues("Date", dateValue);
                     }
                 }
 

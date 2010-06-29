@@ -1,9 +1,9 @@
 ﻿//
 // Pauthor - An authoring library for Pivot collections
-// http://getpivot.com
+// http://pauthor.codeplex.com
 //
-// Copyright (c) 2010, by Microsoft Corporation
-// All rights reserved.
+// This source code is released under the Microsoft Code Sharing License.
+// For full details, see: http://pauthor.codeplex.com/license
 //
 
 using System;

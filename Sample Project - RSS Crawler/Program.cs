@@ -1,9 +1,9 @@
 ﻿//
 // Pauthor - An authoring library for Pivot collections
-// http://getpivot.com
+// http://pauthor.codeplex.com
 //
-// Copyright (c) 2010, by Microsoft Corporation
-// All rights reserved.
+// This source code is released under the Microsoft Code Sharing License.
+// For full details, see: http://pauthor.codeplex.com/license
 //
 
 using System;
@@ -20,6 +20,12 @@ namespace Microsoft.LiveLabs.RssCrawler
     {
         public static void Main(string[] args)
         {
+            if (args.Length < 2)
+            {
+                System.Console.WriteLine("USAGE: RSS Crawler.exe <RSS feed> <output CXML>");
+                return;
+            }
+
             RssCollectionSource source = new RssCollectionSource(args[0]);
             HtmlImageCreationSourceFilter sourceFilter1 = new HtmlImageCreationSourceFilter(source);
             sourceFilter1.HtmlTemplate = "<html><body><h1>{name}</h1>{description}" +
