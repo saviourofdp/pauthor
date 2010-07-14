@@ -1,0 +1,11 @@
+glob:Sample Project - RSS Crawler/bin/*
+glob:Sample Project - RSS Crawler/obj/
+glob:Source/Pauthor/obj/*
+glob:Source/PauthorLib/obj/*
+glob:*.sln.cache
+glob:*.swp
+glob:Test/PauthorTestRunner/bin*
+glob:Test/PauthorTestRunner/obj/*
+glob:bin/Pauthor.*
+glob:bin\PauthorLib.*
+glob:*.suo
