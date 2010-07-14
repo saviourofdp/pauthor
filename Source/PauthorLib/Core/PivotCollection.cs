@@ -7,7 +7,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.LiveLabs.Pauthor.Core
 {
@@ -44,6 +43,7 @@ namespace Microsoft.LiveLabs.Pauthor.Core
             m_items.GetKeyForItem = (item => item.Id);
 
             this.SchemaVersion = "1.0";
+            this.BasePath = ".";
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Microsoft.LiveLabs.Pauthor.Core
         /// A read-only list of the facet categories defined for this collection.
         /// </summary>
         /// <see cref="FacetCategories"/>
-        IReadablePivotList<String, PivotFacetCategory> ICollectionDefinition.FacetCategories
+        IReadOnlyPivotList<String, PivotFacetCategory> ICollectionDefinition.FacetCategories
         {
             get { return this.FacetCategories; }
         }
@@ -220,6 +220,30 @@ namespace Microsoft.LiveLabs.Pauthor.Core
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// The path to which any relative paths in this collection are defined.
+        /// </summary>
+        /// <remarks>
+        /// There are a variety of places where collection data refers to paths relative to the collection. For example,
+        /// the <see cref="Icon"/> and <see cref="ImageBase"/> properties on this object, as well as the <see
+        /// cref="PivotImage.SourcePath"/> property can all refer to relative paths. All such relative paths may be
+        /// resolved with reference to this property.
+        /// <para/>
+        /// All paths in collections can either be local file paths or remote URIs. Generally, assuming that all paths
+        /// are URIs will work best since .NET will automatically convert local file paths into URIs, but not
+        /// vice-versa.
+        /// </remarks>
+        public String BasePath
+        {
+            get { return m_basePath; }
+
+            set
+            {
+                if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("BasePath");
+                m_basePath = value;
+            }
         }
 
         private PivotFacetCategory OnAddFacetCategory(PivotFacetCategory facetCategory)
@@ -276,5 +300,7 @@ namespace Microsoft.LiveLabs.Pauthor.Core
         private PivotList<String, PivotFacetCategory> m_facetCategories;
 
         private PivotList<String, PivotItem> m_items;
+
+        private String m_basePath;
     }
 }

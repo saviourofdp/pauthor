@@ -1,0 +1,189 @@
+﻿#using PauthorLib
+
+########################################################################################################################
+## Unit Tests
+
+#namespace Microsoft.LiveLabs.Pauthor.Test.Core
+
+pivot-collection-unit-test = {
+    _class = PivotCollectionUnitTest;
+    collection = @sample-collection-1;
+    extraItem1 = @extra-item-1;
+    extraItem2 = @extra-item-2;
+    extraFacetCategory1 = @facet-categories.LaunchDate;
+    extraFacetCategory2 = @facet-categories.LaunchDate-alt;
+};
+
+pivot-facet-category-unit-test = {
+    _class = PivotFacetCategoryUnitTest;
+    subjectFacet = @facet-categories.Subject;
+    lettersFacet = @facet-categories.Letters;
+};
+
+pivot-facet-type-unit-test = {
+    _class = PivotFacetTypeUnitTest;
+};
+
+pivot-item-unit-test = {
+    _class = PivotItemUnitTest;
+    emptyCollection = @empty-collection;
+    sampleCollection1 = @sample-collection-1;
+    sampleItem1 = @sample-collection-1.Items.AddRange.0.1;
+};
+
+pivot-link-unit-test = {
+    _class = PivotLinkUnitTest;
+};
+
+#namespace Microsoft.LiveLabs.Pauthor.Test.Crawling
+
+uri-utility-unit-tests = {
+    _class = UriUtilityUnitTests;
+};
+
+#namespace Microsoft.LiveLabs.Pauthor.Test.Imaging
+
+html-image-creator-unit-test = {
+    _class = HtmlImageCreatorUnitTest;
+    sampleItem1 = @extra-item-1;
+    sampleItem2 = @sample-collection-1.Items.AddRange.0.0;
+};
+
+#namespace Microsoft.LiveLabs.Pauthor.Test.Streaming
+
+local-cxml-module-test = {
+    _class = LocalCxmlModuleTest;
+};
+
+########################################################################################################################
+## Module Tests
+
+#namespace Microsoft.LiveLabs.Pauthor.Test.Streaming.OleDb
+
+csv-collection-module-test = {
+    _class = CsvCollectionModuleTest;
+};
+
+excel-collection-module-test = {
+    _class = ExcelCollectionModuleTest;
+};
+
+#namespace Microsoft.LiveLabs.Pauthor.Test.CLI
+
+pauthor-program-module-test = {
+    _class = PauthorProgramModuleTest;
+}
+
+########################################################################################################################
+## Test Fixtures
+
+#namespace Microsoft.LiveLabs.Pauthor.Core
+
+facet-categories = {
+    Letters = {
+        _class = PivotFacetCategory;
+        _constructor = [ Letters, Number ];
+        IsFilterVisible = true;
+        IsMetaDataVisible = false;
+        IsWordWheelVisible = false;
+    };
+    Subject = {
+        _class = PivotFacetCategory;
+        _constructor = [ Subject, String ];
+        IsFilterVisible = true;
+        IsMetaDataVisible = true;
+        IsWordWheelVisible = true;
+    };
+    LaunchDate = {
+        _class = PivotFacetCategory;
+        _constructor = [ Launch Date, DateTime ];
+        IsFilterVisible = true;
+        IsMetaDataVisible = true;
+        IsWordWheelVisible = false;
+    };
+    LaunchDate-alt = {
+        _class = PivotFacetCategory;
+        _constructor = [ Launch Date, Link ];
+        IsFilterVisible = false;
+        IsMetaDataVisible = true;
+        IsWordWheelVisible = true;
+    };
+};
+
+sample-collection-1 = {
+    _class = PivotCollection;
+    FacetCategories.AddRange = [
+        [
+            @facet-categories.Letters,
+            @facet-categories.Subject,
+        ],
+    ];
+    Items.AddRange = [
+        [
+            {
+                _class = PivotItem;
+                _constructor = [ 0, @sample-collection-1 ];
+                Name = Alpha;
+                Description = alpha alpha alpha alpha;
+                Href = http://www.alpha.com;
+                AddFacetValues:1 = [ Letters, [ 5 ]];
+                AddFacetValues:2 = [ Subject, [ Earth, Sky, Water, Explosion ]];
+            },
+            {
+                _class = PivotItem;
+                _constructor = [ 1, @sample-collection-1 ];
+                Name = Bravo;
+                Description = bravo bravo bravo bravo;
+                Href = http://www.bravo.com;
+                AddFacetValues:1 = [ Letters, [ 5 ]];
+                AddFacetValues:2 = [ Subject, [ Vehicle ]];
+            },
+            {
+                _class = PivotItem;
+                _constructor = [ 2, @sample-collection-1 ];
+                Name = Charlie;
+                Description = charlie charlie charlie;
+                Href = http://www.charlie.com;
+                AddFacetValues:1 = [ Letters, [ 6 ]];
+                AddFacetValues:2 = [ Subject, [ Vehicle, Plants ]];
+            },
+        ],
+    ];
+};
+
+sample-collection-2 = {
+    _class = PivotCollection;
+    FacetCategories.AddRange = [
+        [
+            @facet-categories.Letters,
+            @facet-categories.Subject,
+            @facet-categories.LaunchDate,
+        ],
+    ];
+};
+
+extra-item-1 = {
+    _class = PivotItem;
+    _constructor = [ 3, @sample-collection-2 ];
+    Name = Delta;
+    Description = delta delta delta delta;
+    Href = http://www.delta.com;
+    AddFacetValues:1 = [ Letters, [ 5 ]];
+    AddFacetValues:2 = [ Subject, [ Woman, Jewelry ]];
+    AddFacetValues:3 = [ Launch Date, [ 2003-10-03T20:35 ]];
+};
+
+extra-item-2 = {
+    _class = PivotItem;
+    _constructor = [ 4, @sample-collection-1 ];
+    Name = Echo;
+    Description = echo echo echo echo;
+    Href = http://www.echo.com;
+    AddFacetValues:1 = [ Letters, [ 4 ]];
+    AddFacetValues:2 = [ Subject, [ Earth, Sky ]];
+};
+
+empty-collection = {
+    _class = PivotCollection;
+    InferFacetCategories = true;
+};

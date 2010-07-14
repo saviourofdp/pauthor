@@ -8,8 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net;
 
 using Microsoft.LiveLabs.Pauthor.Core;
@@ -18,119 +16,44 @@ using Microsoft.LiveLabs.Pauthor.Streaming;
 
 namespace Microsoft.LiveLabs.RssCrawler
 {
-    public class RssCollectionSource : IPivotCollectionSource
+    public class RssCollectionSource : AbstractCollectionSource
     {
         public RssCollectionSource(String rssFeedUrl)
-        {
-            this.RssFeedUrl = rssFeedUrl;
-        }
-
-        public String RssFeedUrl
-        {
-            get { return m_rssFeedUrl; }
-
-            set
-            {
-                if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("RssFeedUrl");
-                m_rssFeedUrl = value;
-            }
-        }
-
-        public String AdditionalSearchText
-        {
-            get { return this.CachedCollectionData.AdditionalSearchText; }
-        }
-
-        public PivotImage BrandImage
-        {
-            get { return this.CachedCollectionData.BrandImage; }
-        }
-
-        public PivotLink Copyright
-        {
-            get { return this.CachedCollectionData.Copyright; }
-        }
-
-        public IReadablePivotList<String, PivotFacetCategory> FacetCategories
-        {
-            get { return this.CachedCollectionData.FacetCategories; }
-        }
-
-        public PivotImage Icon
-        {
-            get { return this.CachedCollectionData.Icon; }
-        }
-
-        public String ImageBase
-        {
-            get { return this.CachedCollectionData.ImageBase; }
-        }
-
-        public IEnumerable<PivotItem> Items
-        {
-            get { return this.DownloadItems(); }
-        }
-
-        public String Name
-        {
-            get { return this.CachedCollectionData.Name; }
-        }
-
-        public String SchemaVersion
-        {
-            get { return this.CachedCollectionData.SchemaVersion; }
-        }
-
-        public void Dispose()
+            : base(rssFeedUrl)
         {
             // Do nothing.
         }
 
-        private PivotCollection CachedCollectionData
+        protected override void LoadHeaderData()
         {
-            get
-            {
-                if (m_cachedCollectionData == null)
-                {
-                    m_cachedCollectionData = this.DownloadCollectionData();
-                }
-                return m_cachedCollectionData;
-            }
-        }
-
-        private PivotCollection DownloadCollectionData()
-        {
-            PivotCollection collection = new PivotCollection();
-            collection.FacetCategories.Add(new PivotFacetCategory("Author", PivotFacetType.String));
-            collection.FacetCategories.Add(new PivotFacetCategory("Category", PivotFacetType.String));
-            collection.FacetCategories.Add(new PivotFacetCategory("Date", PivotFacetType.DateTime));
+            this.CachedCollectionData.FacetCategories.Add(new PivotFacetCategory("Author", PivotFacetType.String));
+            this.CachedCollectionData.FacetCategories.Add(new PivotFacetCategory("Category", PivotFacetType.String));
+            this.CachedCollectionData.FacetCategories.Add(new PivotFacetCategory("Date", PivotFacetType.DateTime));
 
             XPathHelper document = null;
             using (WebClient webClient = new WebClient())
             {
-                document = new XPathHelper(webClient.DownloadString(this.RssFeedUrl));
+                document = new XPathHelper(webClient.DownloadString(this.BasePath));
             }
 
             String value = null;
             if (document.TryFindString("//channel/title", out value))
             {
-                collection.Name = value;
+                this.CachedCollectionData.Name = value;
             }
 
             if (document.TryFindString("//channel/link", out value))
             {
-                collection.Copyright = new PivotLink("Source", value);
+                this.CachedCollectionData.Copyright = new PivotLink("Source", value);
             }
-
-            return collection;
         }
 
-        private IEnumerable<PivotItem> DownloadItems()
+        protected override IEnumerable<PivotItem> LoadItems()
         {
             XPathHelper document = null;
             using (WebClient webClient = new WebClient())
             {
-                document = new XPathHelper(webClient.DownloadString(this.RssFeedUrl));
+                document = new XPathHelper(webClient.DownloadString(this.BasePath));
             }
 
             int index = 0;

@@ -70,5 +70,17 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming
         /// </summary>
         /// <seealso cref="PivotCollection.Items"/>
         IEnumerable<PivotItem> Items { get; }
+
+        /// <summary>
+        /// A string describing where this collection's data resides.
+        /// </summary>
+        /// <remarks>
+        /// This string could be an absolute file path, a path relative to the current working directory, or even a URI
+        /// describing where the collection is located on the network. Even for collections which are generated on the
+        /// fly should provide a base path relative to which the images and other resources related to the collection
+        /// may be found.
+        /// </remarks>
+        /// <seealso cref="PivotCollection.BasePath"/>
+        String BasePath { get; }
     }
 }

@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Collection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:p="http://schemas.microsoft.com/livelabs/pivot/collection/2009" Name="2009 AKC Dog Breeds" p:Icon="sample_icon.ico" p:BrandImage="sample_brand.png" SchemaVersion="1.0" xmlns="http://schemas.microsoft.com/collection/metadata/2009">
+    <FacetCategories>
+        <FacetCategory Name="Group" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true" />
+        <FacetCategory Name="Size" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true">
+            <Extension>
+                <p:SortOrder Name="Size">
+                    <p:SortValue Value="Tiny" />
+                    <p:SortValue Value="Small" />
+                    <p:SortValue Value="Medium" />
+                    <p:SortValue Value="Large" />
+                    <p:SortValue Value="Extra Large" />
+                </p:SortOrder>
+            </Extension>
+        </FacetCategory>
+        <FacetCategory Name="Popularity" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true">
+            <Extension>
+                <p:SortOrder Name="Popularity">
+                    <p:SortValue Value="Most Popular" />
+                    <p:SortValue Value="Very Popular" />
+                    <p:SortValue Value="Popular" />
+                    <p:SortValue Value="Common" />
+                    <p:SortValue Value="Uncommon" />
+                    <p:SortValue Value="Rare" />
+                </p:SortOrder>
+            </Extension>
+        </FacetCategory>
+        <FacetCategory Name="Temperament" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true" />
+        <FacetCategory Name="Exercise Needs" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true">
+            <Extension>
+                <p:SortOrder Name="Amount">
+                    <p:SortValue Value="Minimal" />
+                    <p:SortValue Value="Low" />
+                    <p:SortValue Value="Medium" />
+                    <p:SortValue Value="High" />
+                </p:SortOrder>
+            </Extension>
+        </FacetCategory>
+        <FacetCategory Name="Approx. Life Span" Type="Number" Format="#0 years" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="false" />
+        <FacetCategory Name="Grooming" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true">
+            <Extension>
+                <p:SortOrder Name="Frequency">
+                    <p:SortValue Value="Very Little" />
+                    <p:SortValue Value="Occasional" />
+                    <p:SortValue Value="Moderate" />
+                    <p:SortValue Value="Regular" />
+                    <p:SortValue Value="Frequent" />
+                </p:SortOrder>
+            </Extension>
+        </FacetCategory>
+        <FacetCategory Name="Coat Length" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true">
+            <Extension>
+                <p:SortOrder Name="Length">
+                    <p:SortValue Value="Short" />
+                    <p:SortValue Value="Medium" />
+                    <p:SortValue Value="Long" />
+                </p:SortOrder>
+            </Extension>
+        </FacetCategory>
+        <FacetCategory Name="Hypo Allergenic" Type="String" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true" />
+        <FacetCategory Name="AKC Recognized In" Type="Number" Format="####" p:IsFilterVisible="true" p:IsMetaDataVisible="true" p:IsWordWheelVisible="false" />
+        <FacetCategory Name="Owned by President" Type="String" p:IsFilterVisible="false" p:IsMetaDataVisible="true" p:IsWordWheelVisible="true" />
+    </FacetCategories>
+    <Items>
+        <Item Id="0" Name="Australian Shepherd" Img="..\Images\0.png" Href="http://www.akc.org/breeds/australian_shepherd/">
+            <Description>The Australian Shepherd is a  Medium dog.</Description>
+            <Facets>
+                <Facet Name="AKC Recognized In">
+                    <Number Value="1991" />
+                </Facet>
+                <Facet Name="Approx. Life Span">
+                    <Number Value="15" />
+                </Facet>
+                <Facet Name="Coat Length">
+                    <String Value="Long" />
+                </Facet>
+                <Facet Name="Exercise Needs">
+                    <String Value="High" />
+                </Facet>
+                <Facet Name="Grooming">
+                    <String Value="Regular" />
+                </Facet>
+                <Facet Name="Group">
+                    <String Value="Herding" />
+                </Facet>
+                <Facet Name="Hypo Allergenic">
+                    <String Value="No" />
+                </Facet>
+                <Facet Name="Popularity">
+                    <String Value="Very Popular" />
+                </Facet>
+                <Facet Name="Size">
+                    <String Value="Medium" />
+                </Facet>
+                <Facet Name="Temperament">
+                    <String Value="Active" />
+                    <String Value="Friendly" />
+                    <String Value="Gentle" />
+                    <String Value="Intelligent" />
+                    <String Value="Protective" />
+                </Facet>
+            </Facets>
+        </Item>
+        <Item Id="1" Name="Beagle" Img="..\Images\1.png" Href="http://www.akc.org/breeds/beagle/">
+            <Description>The Beagle is a  Small dog.</Description>
+            <Facets>
+                <Facet Name="AKC Recognized In">
+                    <Number Value="1885" />
+                </Facet>
+                <Facet Name="Approx. Life Span">
+                    <Number Value="15" />
+                </Facet>
+                <Facet Name="Coat Length">
+                    <String Value="Short" />
+                </Facet>
+                <Facet Name="Exercise Needs">
+                    <String Value="Medium" />
+                </Facet>
+                <Facet Name="Grooming">
+                    <String Value="Very little" />
+                </Facet>
+                <Facet Name="Group">
+                    <String Value="Hound" />
+                </Facet>
+                <Facet Name="Hypo Allergenic">
+                    <String Value="No" />
+                </Facet>
+                <Facet Name="Owned by President">
+                    <String Value="&quot;Him&quot;, &quot;Her&quot; - President Johnson" />
+                </Facet>
+                <Facet Name="Popularity">
+                    <String Value="Most Popular" />
+                </Facet>
+                <Facet Name="Size">
+                    <String Value="Small" />
+                </Facet>
+                <Facet Name="Temperament">
+                    <String Value="Active" />
+                    <String Value="Friendly" />
+                    <String Value="Gentle" />
+                    <String Value="Intelligent" />
+                    <String Value="Strong-willed" />
+                </Facet>
+            </Facets>
+        </Item>
+        <Item Id="2" Name="Cairn Terrier" Img="..\Images\2.png" Href="http://www.akc.org/breeds/cairn_terrier/">
+            <Description>The Cairn Terrier is a  Tiny dog.</Description>
+            <Facets>
+                <Facet Name="AKC Recognized In">
+                    <Number Value="1913" />
+                </Facet>
+                <Facet Name="Approx. Life Span">
+                    <Number Value="15" />
+                </Facet>
+                <Facet Name="Coat Length">
+                    <String Value="Long" />
+                </Facet>
+                <Facet Name="Exercise Needs">
+                    <String Value="Medium" />
+                </Facet>
+                <Facet Name="Grooming">
+                    <String Value="Occasional" />
+                </Facet>
+                <Facet Name="Group">
+                    <String Value="Terrier" />
+                </Facet>
+                <Facet Name="Hypo Allergenic">
+                    <String Value="Yes" />
+                </Facet>
+                <Facet Name="Popularity">
+                    <String Value="Very Popular" />
+                </Facet>
+                <Facet Name="Size">
+                    <String Value="Tiny" />
+                </Facet>
+                <Facet Name="Temperament">
+                    <String Value="Friendly" />
+                    <String Value="Strong-willed" />
+                </Facet>
+            </Facets>
+        </Item>
+        <Item Id="3" Name="Dandie Dinmont Terrier" Img="..\Images\3.png" Href="http://www.akc.org/breeds/dandie_dinmont_terrier/">
+            <Description>The Dandie Dinmont Terrier is a  Tiny dog.</Description>
+            <Facets>
+                <Facet Name="AKC Recognized In">
+                    <Number Value="1886" />
+                </Facet>
+                <Facet Name="Approx. Life Span">
+                    <Number Value="15" />
+                </Facet>
+                <Facet Name="Coat Length">
+                    <String Value="Medium" />
+                </Facet>
+                <Facet Name="Exercise Needs">
+                    <String Value="Medium" />
+                </Facet>
+                <Facet Name="Grooming">
+                    <String Value="Occasional" />
+                </Facet>
+                <Facet Name="Group">
+                    <String Value="Terrier" />
+                </Facet>
+                <Facet Name="Hypo Allergenic">
+                    <String Value="Yes" />
+                </Facet>
+                <Facet Name="Popularity">
+                    <String Value="Rare" />
+                </Facet>
+                <Facet Name="Size">
+                    <String Value="Tiny" />
+                </Facet>
+                <Facet Name="Temperament">
+                    <String Value="Friendly" />
+                    <String Value="Strong-willed" />
+                </Facet>
+            </Facets>
+        </Item>
+        <Item Id="4" Name="English Springer Spaniel" Img="..\Images\4.png" Href="http://www.akc.org/breeds/english_springer_spaniel/">
+            <Description>The English Springer Spaniel is a  Medium dog.</Description>
+            <Facets>
+                <Facet Name="AKC Recognized In">
+                    <Number Value="1910" />
+                </Facet>
+                <Facet Name="Approx. Life Span">
+                    <Number Value="14" />
+                </Facet>
+                <Facet Name="Coat Length">
+                    <String Value="Medium" />
+                </Facet>
+                <Facet Name="Exercise Needs">
+                    <String Value="High" />
+                </Facet>
+                <Facet Name="Grooming">
+                    <String Value="Moderate" />
+                </Facet>
+                <Facet Name="Group">
+                    <String Value="Sporting" />
+                </Facet>
+                <Facet Name="Hypo Allergenic">
+                    <String Value="No" />
+                </Facet>
+                <Facet Name="Owned by President">
+                    <String Value="&quot;Millie&quot; - President George H.W. Bush" />
+                </Facet>
+                <Facet Name="Popularity">
+                    <String Value="Very Popular" />
+                </Facet>
+                <Facet Name="Size">
+                    <String Value="Medium" />
+                </Facet>
+                <Facet Name="Temperament">
+                    <String Value="Alert" />
+                </Facet>
+            </Facets>
+        </Item>
+    </Items>
+</Collection>

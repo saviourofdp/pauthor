@@ -1,0 +1,30 @@
+name,type,format,is_filter_visible,is_metadata_visible,is_wordwheel_visible,sort_name,sort_values
+Group,String,,true,true,true,,
+Size,String,,true,true,true,Size,"Tiny
+Small
+Medium
+Large
+Extra Large"
+Popularity,String,,true,true,true,Popularity,"Most Popular
+Very Popular
+Popular
+Common
+Uncommon
+Rare"
+Temperament,String,,true,true,true,,
+Exercise Needs,String,,true,true,true,Amount,"Minimal
+Low
+Medium
+High"
+Approx. Life Span,Number,#0 years,true,true,false,,
+Grooming,String,,true,true,true,Frequency,"Very Little
+Occasional
+Moderate
+Regular
+Frequent"
+Coat Length,String,,true,true,true,Length,"Short
+Medium
+Long"
+Hypo Allergenic,String,,true,true,true,,
+AKC Recognized In,Number,####,true,true,false,,
+Owned by President,String,,false,true,true,,

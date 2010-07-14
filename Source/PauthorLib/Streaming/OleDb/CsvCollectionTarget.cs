@@ -7,16 +7,8 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.OleDb;
 using System.IO;
 using System.Linq;
-using System.Text;
-
-using Microsoft.LiveLabs.Pauthor.Core;
-using Microsoft.LiveLabs.Pauthor.Imaging;
-using Microsoft.LiveLabs.Pauthor.Streaming;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
 {

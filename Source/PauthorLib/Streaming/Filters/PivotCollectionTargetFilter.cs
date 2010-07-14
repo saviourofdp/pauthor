@@ -7,10 +7,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-
-using Microsoft.LiveLabs.Pauthor.Core;
-using Microsoft.LiveLabs.Pauthor.Streaming;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
 {

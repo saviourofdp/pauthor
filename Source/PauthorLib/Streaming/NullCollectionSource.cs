@@ -8,8 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Microsoft.LiveLabs.Pauthor.Core;
 
@@ -101,7 +99,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming
         /// The facet categories defined for this collection.
         /// </summary>
         /// <seealso cref="PivotCollection.FacetCategories"/>
-        public IReadablePivotList<String, PivotFacetCategory> FacetCategories
+        public IReadOnlyPivotList<String, PivotFacetCategory> FacetCategories
         {
             get { return new PivotList<String, PivotFacetCategory>(); }
         }
@@ -113,6 +111,11 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming
         public IEnumerable<PivotItem> Items
         {
             get { yield break; }
+        }
+
+        public String BasePath
+        {
+            get { return "."; }
         }
 
         /// <summary>

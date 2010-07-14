@@ -8,14 +8,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 using Microsoft.LiveLabs.Pauthor.Core;
-using Microsoft.LiveLabs.Pauthor.Streaming;
+using Microsoft.LiveLabs.Pauthor.Crawling;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
 {
@@ -41,16 +39,16 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
     /// <see cref="OleDbSchemaConstants"/> class. If the underlying data source does not match this schema, the various
     /// queries should be written to adapt it to the one expected by this class.</para>
     /// </remarks>
-    public class OleDbCollectionSource : IPivotCollectionSource
+    public class OleDbCollectionSource : AbstractCollectionSource
     {
         /// <summary>
         /// Creates a new OLE DB collection source with a given connection string.
         /// </summary>
         /// <param name="connectionString">a string describing how to connect to the OLE DB data source</param>
-        public OleDbCollectionSource(String connectionString)
+        public OleDbCollectionSource(String connectionString, String basePath)
+            : base(basePath)
         {
             this.ConnectionString = connectionString;
-            this.ImageBaseDirectory = ".";
         }
 
         /// <summary>
@@ -121,162 +119,44 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
             set { m_itemsDataQuery = (value == "") ? null : value; }
         }
 
-        /// <summary>
-        /// The base directory for images used by this collection source.
-        /// </summary>
-        /// <remarks>
-        /// If any images in the source data use a have a relative source path, it will be resolved based upon this
-        /// directory. By default, this property is set to the current working directory.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException">if given a null or empty value</exception>
-        /// <exception cref="ArgumentException">if the given directory does not exist</exception>
-        public String ImageBaseDirectory
+        protected override void LoadHeaderData()
         {
-            get { return m_imageBaseDirectory; }
-
-            set
-            {
-                if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("ImageBaseDirectory");
-                if (Directory.Exists(value) == false)
-                {
-                    throw new ArgumentException("ImageBaseDirectory does not exist: " + value);
-                }
-
-                m_imageBaseDirectory = value;
-            }
-        }
-
-        /// <summary>
-        /// The user-facing title of this collection. See: <see cref="PivotCollection.Name"/>
-        /// </summary>
-        public String Name
-        {
-            get { return this.CachedCollectionData.Name; }
-        }
-
-        /// <summary>
-        /// The favicon associated with this collection. See: <see cref="PivotCollection.Icon"/>
-        /// </summary>
-        public PivotImage Icon
-        {
-            get { return this.CachedCollectionData.Icon; }
-        }
-
-        /// <summary>
-        /// The branding image associated with this collection. See: <see cref="PivotCollection.BrandImage"/>
-        /// </summary>
-        public PivotImage BrandImage
-        {
-            get { return this.CachedCollectionData.BrandImage; }
-        }
-
-        /// <summary>
-        /// The additional text to be appended to an item's name when requesting search results from Bing. See:
-        /// <see cref="PivotCollection.AdditionalSearchText"/>
-        /// </summary>
-        public String AdditionalSearchText
-        {
-            get { return this.CachedCollectionData.AdditionalSearchText; }
-        }
-
-        /// <summary>
-        /// The version number of the Pivot schema used to represent this collection. See:
-        /// <see cref="PivotCollection.SchemaVersion"/>
-        /// </summary>
-        public String SchemaVersion
-        {
-            get { return this.CachedCollectionData.SchemaVersion; }
-        }
-
-        /// <summary>
-        /// The copyright link for the content of this collection. See: <see cref="PivotCollection.Copyright"/>
-        /// </summary>
-        public PivotLink Copyright
-        {
-            get { return this.CachedCollectionData.Copyright; }
-        }
-
-        /// <summary>
-        /// The DeepZoom Collection (DZC file) which provides the imagery for this collection. See:
-        /// <see cref="PivotCollection.ImageBase"/>
-        /// </summary>
-        public String ImageBase
-        {
-            get { return this.CachedCollectionData.ImageBase; }
-        }
-
-        /// <summary>
-        /// The facet categories defined for this collection. See: <see cref="PivotCollection.FacetCategories"/>
-        /// </summary>
-        public IReadablePivotList<String, PivotFacetCategory> FacetCategories
-        {
-            get { return this.CachedCollectionData.FacetCategories; }
-        }
-
-        /// <summary>
-        /// An enumeration of all the items in this collection. See: <see cref="PivotCollection.Items"/>
-        /// </summary>
-        public IEnumerable<PivotItem> Items
-        {
-            get
-            {
-                if (this.CachedCollectionData != null) { } // Ensure facet categories are loaded.
-
-                using (OleDbConnection connection = new OleDbConnection(this.ConnectionString))
-                {
-                    connection.Open();
-
-                    String itemsDataQuery = this.ItemsDataQuery;
-                    if (itemsDataQuery == null) yield break;
-
-                    OleDbCommand command = new OleDbCommand(itemsDataQuery, connection);
-                    OleDbDataReader dataReader = command.ExecuteReader();
-                    int itemCount = 0;
-                    while (dataReader.Read())
-                    {
-                        PivotItem item = this.ReadItem(dataReader, itemCount);
-                        yield return item;
-                        itemCount++;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Disposes of any resources used by this collection source.
-        /// </summary>
-        public void Dispose()
-        {
-            // Do nothing.
-        }
-
-        private PivotCollection CachedCollectionData
-        {
-            get
-            {
-                if (m_cachedCollectionData == null)
-                {
-                    using (OleDbConnection connection = new OleDbConnection(this.ConnectionString))
-                    {
-                        connection.Open();
-                        this.LoadHeaderData(connection);
-                    }
-                }
-                return m_cachedCollectionData;
-            }
-        }
-
-        private void LoadHeaderData(OleDbConnection connection)
-        {
-            m_cachedCollectionData = new PivotCollection();
             m_facetCategoryMap = new Dictionary<String, PivotFacetCategory>();
 
-            this.LoadCollectionData(connection);
-            this.LoadFacetCategoriesData(connection);
-
-            if (m_cachedCollectionData.FacetCategories.Count() == 0)
+            using (OleDbConnection connection = new OleDbConnection(this.ConnectionString))
             {
-                this.DeriveFacetCategoriesFromItems(connection);
+                connection.Open();
+
+                this.LoadCollectionData(connection);
+                this.LoadFacetCategoriesData(connection);
+
+                if (this.CachedCollectionData.FacetCategories.Count() == 0)
+                {
+                    this.DeriveFacetCategoriesFromItems(connection);
+                }
+            }
+        }
+
+        protected override IEnumerable<PivotItem> LoadItems()
+        {
+            if (this.CachedCollectionData != null) { } // Ensure facet categories are loaded.
+
+            using (OleDbConnection connection = new OleDbConnection(this.ConnectionString))
+            {
+                connection.Open();
+
+                String itemsDataQuery = this.ItemsDataQuery;
+                if (itemsDataQuery == null) yield break;
+
+                OleDbCommand command = new OleDbCommand(itemsDataQuery, connection);
+                OleDbDataReader dataReader = command.ExecuteReader();
+                int itemCount = 0;
+                while (dataReader.Read())
+                {
+                    PivotItem item = this.ReadItem(dataReader, itemCount);
+                    yield return item;
+                    itemCount++;
+                }
             }
         }
 
@@ -299,37 +179,37 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
 
                     if (columnName == OleDbSchemaConstants.Collection.Name)
                     {
-                        m_cachedCollectionData.Name = value;
+                        this.CachedCollectionData.Name = value;
                     }
                     else if (columnName == OleDbSchemaConstants.Collection.Icon)
                     {
-                        String iconPath = Path.Combine(this.ImageBaseDirectory, value);
-                        m_cachedCollectionData.Icon = new PivotImage(iconPath);
+                        String iconPath = UriUtility.ExpandRelativeUri(this.BasePath, value);
+                        this.CachedCollectionData.Icon = new PivotImage(iconPath);
                     }
                     else if (columnName == OleDbSchemaConstants.Collection.BrandImage)
                     {
-                        String brandImagePath = Path.Combine(this.ImageBaseDirectory, value);
-                        m_cachedCollectionData.BrandImage = new PivotImage(brandImagePath);
+                        String brandImagePath = UriUtility.ExpandRelativeUri(this.BasePath, value);
+                        this.CachedCollectionData.BrandImage = new PivotImage(brandImagePath);
                     }
                     else if (columnName == OleDbSchemaConstants.Collection.AdditionalSearchText)
                     {
-                        m_cachedCollectionData.AdditionalSearchText = value;
+                        this.CachedCollectionData.AdditionalSearchText = value;
                     }
                     else if (columnName == OleDbSchemaConstants.Collection.CopyrightTitle)
                     {
-                        if (m_cachedCollectionData.Copyright == null)
+                        if (this.CachedCollectionData.Copyright == null)
                         {
-                            m_cachedCollectionData.Copyright = new PivotLink(value, "about:none");
+                            this.CachedCollectionData.Copyright = new PivotLink(value, "about:none");
                         }
-                        m_cachedCollectionData.Copyright.Title = value;
+                        this.CachedCollectionData.Copyright.Title = value;
                     }
                     else if (columnName == OleDbSchemaConstants.Collection.CopyrightUrl)
                     {
-                        if (m_cachedCollectionData.Copyright == null)
+                        if (this.CachedCollectionData.Copyright == null)
                         {
-                            m_cachedCollectionData.Copyright = new PivotLink("Copyright", value);
+                            this.CachedCollectionData.Copyright = new PivotLink("Copyright", value);
                         }
-                        m_cachedCollectionData.Copyright.Url = value;
+                        this.CachedCollectionData.Copyright.Url = value;
                     }
                 }
             }
@@ -388,7 +268,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
                     }
                 }
 
-                m_cachedCollectionData.FacetCategories.Add(facetCategory);
+                this.CachedCollectionData.FacetCategories.Add(facetCategory);
                 m_facetCategoryMap.Add(facetCategory.Name.ToLowerInvariant(), facetCategory);
             }
         }
@@ -432,7 +312,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
                 if (OleDbSchemaConstants.Item.AllColumns.Contains(name)) continue;
 
                 PivotFacetCategory facetCategory = new PivotFacetCategory(name, PivotFacetType.String);
-                m_cachedCollectionData.FacetCategories.Add(facetCategory);
+                this.CachedCollectionData.FacetCategories.Add(facetCategory);
                 m_facetCategoryMap.Add(facetCategory.Name, facetCategory);
             }
         }
@@ -455,7 +335,8 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
                 }
                 else if (columnName == OleDbSchemaConstants.Item.Image)
                 {
-                    item.Image = new PivotImage(Path.Combine(this.ImageBaseDirectory, value));
+                    String imagePath = UriUtility.ExpandRelativeUri(this.BasePath, value);
+                    item.Image = new PivotImage(imagePath);
                 }
                 else if (columnName == OleDbSchemaConstants.Item.Description)
                 {
@@ -537,10 +418,6 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
         private String m_facetCategoriesDataQuery;
 
         private String m_itemsDataQuery;
-
-        private String m_imageBaseDirectory;
-
-        private PivotCollection m_cachedCollectionData;
 
         private Dictionary<String, PivotFacetCategory> m_facetCategoryMap;
     }

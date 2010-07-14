@@ -7,13 +7,10 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 
-using Microsoft.LiveLabs.Pauthor;
 using Microsoft.LiveLabs.Pauthor.Core;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming

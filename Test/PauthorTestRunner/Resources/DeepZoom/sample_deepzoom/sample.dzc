@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Collection MaxLevel="7" TileSize="256" Format="png" NextItemId="5" ServerFormat="Default" xmlns="http://schemas.microsoft.com/deepzoom/2009">
+  <Items>
+    <I Id="0" N="0" Source="0.dzi">
+      <Size Width="1200" Height="1500" />
+    </I>
+    <I Id="1" N="1" Source="1.dzi">
+      <Size Width="1199" Height="1500" />
+    </I>
+    <I Id="2" N="2" Source="2.dzi">
+      <Size Width="1200" Height="1500" />
+    </I>
+    <I Id="3" N="3" Source="3.dzi">
+      <Size Width="1200" Height="1500" />
+    </I>
+    <I Id="4" N="4" Source="4.dzi">
+      <Size Width="1199" Height="1500" />
+    </I>
+  </Items>
+</Collection>

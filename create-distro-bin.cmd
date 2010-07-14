@@ -15,5 +15,4 @@ cp LICENSE.txt %DISTRO_DIR%
 cp README-bin.txt %DISTRO_DIR%\README.txt
 xcopy /i/s "Sample Collection" "%DISTRO_DIR%\Sample Collection"
 
-echo Press enter to finish
-readline
+set /P foo=Press enter to finish

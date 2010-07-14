@@ -7,9 +7,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-
-using Microsoft.LiveLabs.Pauthor.Core;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming
 {

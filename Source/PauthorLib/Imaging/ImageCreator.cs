@@ -7,10 +7,8 @@
 //
 
 using System;
-using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Microsoft.LiveLabs.Pauthor.Imaging
 {
@@ -129,6 +127,8 @@ namespace Microsoft.LiveLabs.Pauthor.Imaging
         /// Constant for the Image file format extension
         /// </summary>
         protected const String StandardImageFormatExtension = ".png";
+
+        protected static readonly ImageFormat StandardImageFormat = ImageFormat.Png;
 
         private String m_workingDirectory;
 

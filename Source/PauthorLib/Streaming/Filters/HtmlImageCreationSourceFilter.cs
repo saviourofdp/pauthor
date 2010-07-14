@@ -8,13 +8,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 using Microsoft.LiveLabs.Pauthor.Core;
 using Microsoft.LiveLabs.Pauthor.Imaging;
-using Microsoft.LiveLabs.Pauthor.Streaming;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
 {

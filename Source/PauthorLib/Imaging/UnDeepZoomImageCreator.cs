@@ -8,8 +8,8 @@
 
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
+using System.Net;
 using System.Xml.XPath;
 
 using Microsoft.LiveLabs.Pauthor.Crawling;
@@ -40,90 +40,80 @@ namespace Microsoft.LiveLabs.Pauthor.Imaging
         /// </summary>
         /// <param name="dziPath">the path (relative or absolute) to the DZI file to convert</param>
         /// <returns>an absolute path to the resulting image within this image creator's working directory</returns>
-        public String UnDeepZoomImage(String dziPath)
+        public String UnDeepZoomImage(String dziUri)
         {
             try
             {
-                String baseName = Path.GetFileNameWithoutExtension(dziPath);
-                String finalImagePath = Path.Combine(this.WorkingDirectory, baseName + StandardImageFormatExtension);
-                if (File.Exists(finalImagePath)) return finalImagePath;
-
-                String baseDirectory = Directory.GetParent(dziPath).FullName;
-                String filesDirectory = Path.Combine(baseDirectory,
-                    Path.GetFileNameWithoutExtension(dziPath) + "_files");
-                String maxDepthDirectory = this.FindMaxDepthDirectory(filesDirectory);
-                String dziText = File.ReadAllText(dziPath);
-
-                String xmlData = File.ReadAllText(dziPath);
-                XPathHelper dzi = new XPathHelper(xmlData);
-                String xmlns = this.DetermineNamespace(xmlData);
-                if (xmlns != null)
+                using (WebClient webClient = new WebClient())
                 {
-                    dzi.AddNamespace("d", xmlns);
-                }
+                    String baseName = Path.GetFileNameWithoutExtension(UriUtility.GetFileName(dziUri));
+                    String finalImagePath = Path.Combine(this.WorkingDirectory, baseName + StandardImageFormatExtension);
+                    if (File.Exists(finalImagePath)) return finalImagePath;
 
-                String format = dzi.FindString("//d:Image/@Format");
-                int tileSize = dzi.FindInt("//d:Image/@TileSize");
-                int overlap = dzi.FindInt("//d:Image/@Overlap");
-                int width = dzi.FindInt("//d:Size/@Width");
-                int height = dzi.FindInt("//d:Size/@Height");
+                    String filesDirectoryUri = UriUtility.ExpandRelativeUri(dziUri, baseName + "_files");
+                    String dziText = UriUtility.DownloadString(webClient, dziUri);
 
-                Bitmap finalImage = new Bitmap(width, height);
-                Graphics finalImageGraphics = Graphics.FromImage(finalImage);
-
-                int colCount = (int)Math.Ceiling((double)width / tileSize);
-                int rowCount = (int)Math.Ceiling((double)height / tileSize);
-                for (int row = 0; row < rowCount; row++)
-                {
-                    for (int col = 0; col < colCount; col++)
+                    XPathHelper dzi = new XPathHelper(dziText);
+                    String xmlns = this.DetermineNamespace(dziText);
+                    if (xmlns != null)
                     {
-                        String tileName = col + "_" + row + "." + format;
-                        String tilePath = Path.Combine(maxDepthDirectory, tileName);
-                        if (File.Exists(tilePath) == false)
-                        {
-                            Log.Warning("Could not find tile {0}, {1} for DZI {2} at zoom level {3}. " +
-                                "The image for this tile may be incomplete.", col, row, Path.GetFileName(dziPath),
-                                Path.GetFileName(maxDepthDirectory));
-                            continue;
-                        }
-
-                        Bitmap tile = new Bitmap(tilePath);
-                        float tileX = col * (tileSize);
-                        float tileY = row * (tileSize);
-                        finalImageGraphics.DrawImage(tile, tileX, tileY);
+                        dzi.AddNamespace("d", xmlns);
                     }
+
+                    String format = dzi.FindString("//d:Image/@Format");
+                    int tileSize = dzi.FindInt("//d:Image/@TileSize");
+                    int overlap = dzi.FindInt("//d:Image/@Overlap");
+                    int width = dzi.FindInt("//d:Size/@Width");
+                    int height = dzi.FindInt("//d:Size/@Height");
+
+                    int maxLevel = (int) Math.Ceiling(Math.Log(Math.Max(width, height), 2));
+
+                    Bitmap finalImage = new Bitmap(width, height);
+                    Graphics finalImageGraphics = Graphics.FromImage(finalImage);
+
+                    int colCount = (int)Math.Ceiling((double)width / tileSize);
+                    int rowCount = (int)Math.Ceiling((double)height / tileSize);
+                    for (int row = 0; row < rowCount; row++)
+                    {
+                        for (int col = 0; col < colCount; col++)
+                        {
+                            String tileName = col + "_" + row + "." + format;
+                            Uri tileUri = new Uri(filesDirectoryUri + "/" + maxLevel + "/" + tileName);
+                            Stream imageStream = null;
+
+                            try
+                            {
+                                imageStream = webClient.OpenRead(tileUri);
+                                Bitmap tile = new Bitmap(imageStream);
+                                float tileX = col * (tileSize);
+                                float tileY = row * (tileSize);
+                                finalImageGraphics.DrawImage(tile, tileX, tileY);
+                            }
+                            catch (WebException)
+                            {   
+                                Log.Warning("Could not find tile {0}, {1} for DZI {2}. " +
+                                    "The image for this tile may be incomplete.", col, row, dziUri);
+                                throw;
+                            }
+                            finally
+                            {
+                                if (imageStream != null) imageStream.Close();
+                            }
+                        }
+                    }
+
+                    finalImage.Save(finalImagePath, StandardImageFormat);
+                    return finalImagePath;
                 }
-
-                ImageCodecInfo codecInfo = ImageCodecInfo.GetImageEncoders()[StandardImageEncoder];
-                EncoderParameters encoderParameters = new EncoderParameters(1);
-                encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 100L);
-
-                finalImage.Save(finalImagePath, codecInfo, encoderParameters);
-                return finalImagePath;
             }
             catch (XPathException e)
             {
-                throw new PauthorException("Unable to decode DZI: " + dziPath, e);
+                throw new PauthorException("Unable to decode DZI: " + dziUri, e);
             }
             catch (Exception e)
             {
-                throw new PauthorException("Unable to un-deepzoom DZI: " + dziPath, e);
+                throw new PauthorException("Unable to un-deepzoom DZI: " + dziUri, e);
             }
-        }
-
-        private String FindMaxDepthDirectory(String filesDirectory)
-        {
-            int maxDepth = 0;
-            foreach (String subdirectory in Directory.GetDirectories(filesDirectory))
-            {
-                String subdirectoryName = Path.GetFileName(subdirectory);
-                int currentDepth = 0;
-                if (Int32.TryParse(subdirectoryName, out currentDepth))
-                {
-                    maxDepth = Math.Max(maxDepth, currentDepth);
-                }
-            }
-            return Path.Combine(filesDirectory, maxDepth.ToString());
         }
 
         private String DetermineNamespace(String xmlData)

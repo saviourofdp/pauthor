@@ -9,8 +9,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Microsoft.LiveLabs.Pauthor.Core
 {
@@ -19,7 +17,7 @@ namespace Microsoft.LiveLabs.Pauthor.Core
     /// </summary>
     /// <typeparam name="K">the type of the unique identifier for each element</typeparam>
     /// <typeparam name="T">the type of each element</typeparam>
-    public interface IReadablePivotList<K, T> : IEnumerable<T>, IEnumerable
+    public interface IReadOnlyPivotList<K, T> : IEnumerable<T>, IEnumerable
     {
         /// <summary>
         /// Returns or changes the item at the given index.

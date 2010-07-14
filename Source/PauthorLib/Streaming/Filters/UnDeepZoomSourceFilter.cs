@@ -8,12 +8,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
 
 using Microsoft.LiveLabs.Pauthor.Core;
+using Microsoft.LiveLabs.Pauthor.Crawling;
 using Microsoft.LiveLabs.Pauthor.Imaging;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
@@ -101,7 +99,8 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
                 if (imageBase == null) return this.Source.Items;
 
                 imageBase = imageBase.ToLowerInvariant();
-                if (imageBase.EndsWith("dzc") == false) return this.Source.Items;
+                if ((imageBase.EndsWith("dzc") || imageBase.EndsWith("xml")) == false) return this.Source.Items;
+                imageBase = UriUtility.ExpandRelativeUri(this.BasePath, this.Source.ImageBase);
 
                 return this.ProcessItems(imageBase);
             }
@@ -129,32 +128,29 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
 
         private IEnumerable<PivotItem> ProcessItems(String imageBase)
         {
-            String deepZoomDirectory = Directory.GetParent(imageBase).FullName;
-
             foreach (PivotItem item in this.Source.Items)
             {
-                if ((item.Image == null) || (item.Image.SourcePath.StartsWith("#") == false))
+                if ((item.Image == null) || (item.Image.IsDeepZoomIndex == false))
                 {
                     yield return item;
                     continue;
                 }
 
                 String dzcIndex = item.Image.SourcePath.Substring(1);
-                String imageName = this.GetImageName(imageBase, dzcIndex);
-                if (imageName == null)
+                String imageUri = this.GetImageUri(imageBase, dzcIndex);
+                if (imageUri == null)
                 {
                     item.Image = null;
                 }
-                else if (imageName.EndsWith("dzi"))
+                else if (UriUtility.GetFileName(imageUri).EndsWith("dzi"))
                 {
-                    String imagePath = Path.Combine(deepZoomDirectory, imageName);
-                    item.Image.SourcePath = m_imageCreator.UnDeepZoomImage(imagePath);
+                    item.Image.SourcePath = m_imageCreator.UnDeepZoomImage(imageUri);
                 }
                 yield return item;
             }
         }
 
-        private String GetImageName(String imageBase, String dzcIndex)
+        private String GetImageUri(String imageBase, String dzcIndex)
         {
             if (m_dzcReader == null)
             {
@@ -170,7 +166,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
                     if (m_dzcReader.NodeType != XmlNodeType.Element) continue;
                     if (m_dzcReader.LocalName != "I") continue;
                     if (m_dzcReader.GetAttribute("Id") != dzcIndex) continue;
-                    return m_dzcReader.GetAttribute("Source");
+                    return UriUtility.ExpandRelativeUri(imageBase, m_dzcReader.GetAttribute("Source"));
                 }
 
                 m_dzcReader.Close();

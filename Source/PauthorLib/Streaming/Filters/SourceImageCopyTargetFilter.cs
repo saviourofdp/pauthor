@@ -9,11 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 using Microsoft.LiveLabs.Pauthor.Core;
-using Microsoft.LiveLabs.Pauthor.Streaming;
+using Microsoft.LiveLabs.Pauthor.Crawling;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
 {
@@ -160,7 +158,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
                     {
                         String imageFileName = Path.GetFileName(item.Image.SourcePath);
                         String newImagePath = Path.Combine(newImageDirectoryPath, imageFileName);
-                        File.Copy(item.Image.SourcePath, newImagePath, true);
+                        item.Image.Save(newImagePath);
 
                         String newRelativeFileName = Path.Combine(newImageDirectoryName, imageFileName);
                         item.Image.SourcePath = newRelativeFileName;
@@ -173,17 +171,20 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
             {
                 if (sourceImage == null) return null;
 
-                String sourceFilePath = sourceImage.SourcePath;
+                PivotImage newImage = new PivotImage(
+                    UriUtility.ExpandRelativeUri(this.BasePath, sourceImage.SourcePath));
+
+                String sourceFileName = UriUtility.GetFileName(newImage.SourcePath);
                 String targetFileName = Path.GetFileNameWithoutExtension(m_localTarget.BasePath);
-                targetFileName += suffix + Path.GetExtension(sourceFilePath);
+                targetFileName += suffix + Path.GetExtension(sourceFileName);
                 String targetDirectoryPath = Directory.GetParent(m_localTarget.BasePath).FullName;
                 String targetFilePath = Path.Combine(targetDirectoryPath, targetFileName);
                 if (File.Exists(targetFilePath) == false)
                 {
-                    File.Copy(sourceFilePath, targetFilePath);
+                    newImage.Save(targetFilePath);
                 }
 
-                PivotImage newImage = new PivotImage(targetFileName);
+                newImage.SourcePath = targetFileName;
                 return newImage;
             }
 

@@ -7,7 +7,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.LiveLabs.Pauthor.Core
 {
@@ -24,6 +23,6 @@ namespace Microsoft.LiveLabs.Pauthor.Core
         /// The facet categories which define this collection.
         /// </summary>
         /// <see cref="PivotCollection.FacetCategories"/>
-        IReadablePivotList<String, PivotFacetCategory> FacetCategories { get; }
+        IReadOnlyPivotList<String, PivotFacetCategory> FacetCategories { get; }
     }
 }

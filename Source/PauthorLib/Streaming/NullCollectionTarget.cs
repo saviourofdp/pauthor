@@ -6,11 +6,6 @@
 // For full details, see: http://pauthor.codeplex.com/license
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace Microsoft.LiveLabs.Pauthor.Streaming
 {
     /// <summary>

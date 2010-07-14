@@ -9,8 +9,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Microsoft.LiveLabs.Pauthor.Core
 {
@@ -22,7 +20,7 @@ namespace Microsoft.LiveLabs.Pauthor.Core
     /// </summary>
     /// <typeparam name="K">the type of the unique identifier for each element</typeparam>
     /// <typeparam name="T">the type of each element</typeparam>
-    public class PivotList<K, T> : IList<T>, IReadablePivotList<K,T>
+    public class PivotList<K, T> : IList<T>, IReadOnlyPivotList<K,T>
     {
         /// <summary>
         /// Creates a new, empty list.

@@ -14,9 +14,10 @@ cp bin\Pauthor.exe %DISTRO_DIR%\bin
 cp LICENSE.txt %DISTRO_DIR%
 cp README-src.txt %DISTRO_DIR%\README.txt
 cp "API Reference.chm" %DISTRO_DIR%
+cp Pauthor.sln %DISTRO_DIR%
 xcopy /i/s "Sample Collection" %DISTRO_DIR%\"Sample Collection"
 xcopy /i/s/exclude:create-distro-excludes.txt Source %DISTRO_DIR%\Source
+xcopy /i/s/exclude:create-distro-excludes.txt Test %DISTRO_DIR%\Test
 xcopy /i/s/exclude:create-distro-excludes.txt "Sample Project - RSS Crawler" %DISTRO_DIR%\"Sample Project - RSS Crawler"
 
-echo Press enter to finish
-readline
+set /P FOO=Press enter to finish

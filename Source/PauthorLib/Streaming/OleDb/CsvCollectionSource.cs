@@ -7,14 +7,11 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Data.OleDb;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 using Microsoft.LiveLabs.Pauthor.Core;
-using Microsoft.LiveLabs.Pauthor.Streaming;
+using Microsoft.LiveLabs.Pauthor.Crawling;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
 {
@@ -29,14 +26,14 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
     /// class provides a set of properties to allow you to independently specify the name of each CSV file for the three
     /// tables in the collection schema.
     /// </remarks>
-    public class CsvCollectionSource : OleDbCollectionSource, ILocalCollectionSource
+    public class CsvCollectionSource : OleDbCollectionSource
     {
         /// <summary>
         /// Creates a new CSV collection source and sets its <see cref="BasePath"/>.
         /// </summary>
         /// <param name="basePath">the path to the CSV file containing item data for the new collection source</param>
         public CsvCollectionSource(String basePath)
-            : base(ConnectionStringTemplate)
+            : base(ConnectionStringTemplate, basePath)
         {
             this.BasePath = basePath;
         }
@@ -56,11 +53,11 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
         /// <para>If so desired, you may later change any of those properties to a new value. The initial value for this
         /// property is set in the constructor.</para>
         /// </remarks>
-        public String BasePath
+        public override String BasePath
         {
             get { return Path.Combine(this.BaseDirectory, this.ItemsFileName); }
 
-            set
+            protected set
             {
                 if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("BasePath");
                 if (File.Exists(value) == false) throw new ArgumentException("BasePath does not exist: " + value);
@@ -71,13 +68,14 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
                 }
 
                 this.BaseDirectory = Directory.GetParent(value).FullName;
-                this.ImageBaseDirectory = this.BaseDirectory;
                 this.ConnectionString = String.Format(ConnectionStringTemplate, this.BaseDirectory);
                 this.ItemsFileName = Path.GetFileName(value);
 
                 String baseFileName = Path.GetFileNameWithoutExtension(value);
                 this.CollectionFileName = baseFileName + "_collection.csv";
                 this.FacetCategoriesFileName = baseFileName + "_facetcategories.csv";
+
+                base.BasePath = value;
             }
         }
 
@@ -116,7 +114,13 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
             set
             {
                 m_collectionFileName = value;
-                this.CollectionDataQuery = (value == null) ? null : String.Format(CommandTemplate, value);
+                if (value == null) return;
+
+                String collectionFilePath = UriUtility.ExpandRelativeUri(this.BasePath, value);
+                if (File.Exists(collectionFilePath))
+                {
+                    this.CollectionDataQuery = String.Format(CommandTemplate, value);
+                }
             }
         }
 
@@ -132,7 +136,13 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
             set
             {
                 m_facetCategoriesFileName = value;
-                this.FacetCategoriesDataQuery = (value == null) ? null : String.Format(CommandTemplate, value);
+                if (value == null) return;
+
+                String facetCategoriesFilePath = UriUtility.ExpandRelativeUri(this.BasePath, value);
+                if (File.Exists(facetCategoriesFilePath))
+                {
+                    this.FacetCategoriesDataQuery = String.Format(CommandTemplate, value);
+                }
             }
         }
 

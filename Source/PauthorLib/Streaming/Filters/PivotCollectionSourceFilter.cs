@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 
 using Microsoft.LiveLabs.Pauthor.Core;
-using Microsoft.LiveLabs.Pauthor.Streaming;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
 {
@@ -125,7 +124,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
         /// <summary>
         /// The facet categories defined for this collection. See: <see cref="PivotCollection.FacetCategories"/>
         /// </summary>
-        public virtual IReadablePivotList<String, PivotFacetCategory> FacetCategories
+        public virtual IReadOnlyPivotList<String, PivotFacetCategory> FacetCategories
         {
             get { return this.Source.FacetCategories; }
         }
@@ -136,6 +135,14 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.Filters
         public virtual IEnumerable<PivotItem> Items
         {
             get { return this.Source.Items; }
+        }
+
+        /// <summary>
+        /// A string describing where this collection's data resides.
+        /// </summary>
+        public virtual String BasePath
+        {
+            get { return this.Source.BasePath; }
         }
 
         /// <summary>

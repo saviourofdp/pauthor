@@ -8,7 +8,6 @@
 
 using System;
 using System.Globalization;
-using System.Text;
 
 namespace Microsoft.LiveLabs.Pauthor.Core
 {

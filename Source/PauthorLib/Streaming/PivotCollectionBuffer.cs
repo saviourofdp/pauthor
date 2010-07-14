@@ -128,7 +128,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming
         /// The facet categories defined for this collection.
         /// </summary>
         /// <seealso cref="PivotCollection.FacetCategories"/>
-        public IReadablePivotList<String, PivotFacetCategory> FacetCategories
+        public IReadOnlyPivotList<String, PivotFacetCategory> FacetCategories
         {
             get { return this.Collection.FacetCategories; }
         }
@@ -140,6 +140,11 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming
         public IEnumerable<PivotItem> Items
         {
             get { return this.Collection.Items; }
+        }
+
+        public String BasePath
+        {
+            get { return this.Collection.BasePath; }
         }
 
         /// <summary>
@@ -160,6 +165,7 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming
             this.Collection.ImageBase = source.ImageBase;
             this.Collection.FacetCategories.AddRange(source.FacetCategories);
             this.Collection.Items.AddRange(source.Items);
+            this.Collection.BasePath = source.BasePath;
         }
 
         /// <summary>

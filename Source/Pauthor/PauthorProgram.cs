@@ -9,17 +9,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 using Microsoft.LiveLabs.Anise.API;
 
-using Microsoft.LiveLabs.Pauthor;
-using Microsoft.LiveLabs.Pauthor.Imaging;
 using Microsoft.LiveLabs.Pauthor.Streaming;
 using Microsoft.LiveLabs.Pauthor.Streaming.Filters;
-using Microsoft.LiveLabs.Pauthor.Streaming.OleDb;
 
 namespace Microsoft.LiveLabs.Pauthor.CLI
 {
@@ -32,6 +26,10 @@ namespace Microsoft.LiveLabs.Pauthor.CLI
                 AniseProgram program = new AniseProgram();
                 program.LoadEmbeddedResource(typeof(PauthorProgram), "AniseConfig.adi");
                 program.Run("pauthor-program", args);
+            }
+            catch (StopExecutionException e)
+            {
+                Environment.ExitCode = e.Success ? 0 : 1;
             }
             catch (Exception e)
             {
@@ -53,33 +51,40 @@ namespace Microsoft.LiveLabs.Pauthor.CLI
         {
             try
             {
-                long start = DateTime.Now.Ticks;
-                this.ParseArgs(args);
-
-                if (m_currentSource == null)
+                try
                 {
-                    this.Fail("No source was specified.");
-                }
+                    long start = DateTime.Now.Ticks;
+                    this.ParseArgs(args);
 
-                if (m_currentTarget == null)
+                    if (m_currentSource == null)
+                    {
+                        this.Fail("No source was specified.");
+                    }
+
+                    if (m_currentTarget == null)
+                    {
+                        this.Fail("No target was specified.");
+                    }
+
+                    m_currentTarget.Write(m_currentSource);
+
+                    long end = DateTime.Now.Ticks;
+                    Log.Progress("Finished in {0:HH:mm:ss.fff}", new DateTime(end - start));
+                    this.Exit(true);
+                }
+                catch (StopExecutionException)
                 {
-                    this.Fail("No target was specified.");
+                    throw;
                 }
-
-                m_currentTarget.Write(m_currentSource);
-
-                long end = DateTime.Now.Ticks;
-                Log.Progress("Finished in {0:HH:mm:ss.fff}", new DateTime(end - start));
-                this.Exit(true);
+                catch (Exception e)
+                {
+                    Log.Error("A problem occured while processing your collection: {0}", e);
+                    this.Exit(false);
+                }
             }
-            catch (Exception e)
+            catch (StopExecutionException e)
             {
-                while (e.InnerException != null)
-                {
-                    e = e.InnerException;
-                }
-                Log.Error("A problem occured while processing your collection: {0}", e);
-                this.Exit(false);
+                Environment.ExitCode = e.Success ? 0 : 1;
             }
         }
 
@@ -103,7 +108,6 @@ namespace Microsoft.LiveLabs.Pauthor.CLI
 
                     String name = argGroup[1] + "-source";
                     if (this.AniseEngine.ContainsObject(name) == false) this.Fail("Unknown source type: " + argGroup[1]);
-                    if (File.Exists(argGroup[2]) == false) this.Fail("Could not find file: " + argGroup[2]);
 
                     m_currentSource = this.AniseEngine.GetObject<IPivotCollectionSource>(name);
                 }
@@ -136,7 +140,8 @@ namespace Microsoft.LiveLabs.Pauthor.CLI
         private void PrintHelp()
         {
             System.Console.Write(this.HelpText);
-            this.Exit(true);
+
+            throw new StopExecutionException(true);
         }
 
         private void Fail(String message)
@@ -145,7 +150,8 @@ namespace Microsoft.LiveLabs.Pauthor.CLI
             System.Console.WriteLine(message);
             System.Console.Write("Use /? for usage instructions");
             System.Console.WriteLine();
-            this.Exit(false);
+
+            throw new StopExecutionException(false);
         }
 
         private void Exit(bool success)
@@ -153,11 +159,21 @@ namespace Microsoft.LiveLabs.Pauthor.CLI
             if (m_currentSource != null) m_currentSource.Dispose();
             if (m_currentTarget != null) m_currentTarget.Dispose();
 
-            Environment.Exit(success ? 0 : 1);
+            throw new StopExecutionException(success);
         }
 
         private IPivotCollectionSource m_currentSource;
 
         private IPivotCollectionTarget m_currentTarget;
+    }
+
+    internal class StopExecutionException : Exception
+    {
+        public bool Success { get; private set; }
+
+        public StopExecutionException(bool success)
+        {
+            this.Success = success;
+        }
     }
 }

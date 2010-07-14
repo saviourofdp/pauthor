@@ -7,7 +7,6 @@
 //
 
 using System;
-using System.Text;
 
 namespace Microsoft.LiveLabs.Pauthor.Core
 {

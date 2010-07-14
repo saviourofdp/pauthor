@@ -7,16 +7,8 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-using Microsoft.LiveLabs.Pauthor.Core;
-using Microsoft.LiveLabs.Pauthor.Imaging;
-using Microsoft.LiveLabs.Pauthor.Streaming;
 
 namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
 {
@@ -29,48 +21,24 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
     /// cref="OleDbSchemaConstants"/> class. However, since Excel doesn't actually contain SQL tables, individual sheets
     /// within the Excel file are used as tables instead.
     /// </remarks>
-    public class ExcelCollectionSource : OleDbCollectionSource, ILocalCollectionSource
+    public class ExcelCollectionSource : OleDbCollectionSource
     {
         /// <summary>
         /// Creates a new Excel collection source and sets its <see cref="BasePath"/>.
         /// </summary>
         /// <param name="basePath">the path to the Excel file containing the collection's data</param>
         public ExcelCollectionSource(String basePath)
-            : base(String.Format(ConnectionStringTemplate, basePath))
+            : base(String.Format(ConnectionStringTemplate, basePath), basePath)
         {
-            this.BasePath = basePath;
+            // Do nothing.
         }
 
-        /// <summary>
-        /// The path to the Excel file containing the collection data.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">if given a null value</exception>
-        /// <exception cref="ArgumentException">
-        /// if the given file does not exist, or if the file has a '.' in its name (not including the extension). This
-        /// restriction is due to the facet that OLE DB treats Excel files as a database, and '.' is not a valid
-        /// character in database names.
-        /// </exception>
-        public String BasePath
+        protected override void LoadHeaderData()
         {
-            get { return m_basePath; }
+            this.ConnectionString = String.Format(ConnectionStringTemplate, this.BasePath);
+            this.UpdateDataQueries();
 
-            set
-            {
-                if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("BasePath cannot be null or empty");
-                if (File.Exists(value) == false) throw new ArgumentException("BasePath does not exist: " + value);
-                if (Path.GetFileNameWithoutExtension(value).Contains('.'))
-                {
-                    throw new ArgumentException(
-                        "BasePath cannot contain '.' characters within the file name: " + value);
-                }
-
-                m_basePath = value;
-                m_baseDirectory = Directory.GetParent(this.BasePath).FullName;
-                this.ImageBaseDirectory = m_baseDirectory;
-
-                this.ConnectionString = String.Format(ConnectionStringTemplate, m_basePath);
-                this.UpdateDataQueries();
-            }
+            base.LoadHeaderData();
         }
 
         private void UpdateDataQueries()
@@ -119,9 +87,5 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming.OleDb
             @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\12.0\Access Connectivity Engine\Engines\Excel\TypeGuessRows";
 
         private const String CommandTemplate = "SELECT * FROM [{0}]";
-
-        private String m_basePath;
-
-        private String m_baseDirectory;
     }
 }

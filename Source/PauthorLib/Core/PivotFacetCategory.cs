@@ -7,7 +7,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.LiveLabs.Pauthor.Core
 {
