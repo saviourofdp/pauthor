@@ -7,8 +7,10 @@
 //
 
 using System;
+using System.Linq;
 using System.IO;
 
+using Microsoft.LiveLabs.Pauthor.Core;
 using Microsoft.LiveLabs.Pauthor.Streaming;
 
 namespace Microsoft.LiveLabs.Pauthor.Test.Streaming
@@ -33,6 +35,36 @@ namespace Microsoft.LiveLabs.Pauthor.Test.Streaming
 
             AssertCxmlSchemaValid(targetPath);
             AssertCollectionsEqual(source, targetAsSource);
+        }
+
+        public void TestBrokenRelatedLinks()
+        {
+            PivotCollection collection = new PivotCollection();
+            collection.FacetCategories.Add(new PivotFacetCategory("alpha", PivotFacetType.String));
+
+            PivotItem item = new PivotItem("0", collection);
+            item.AddFacetValues("alpha", "alpha");
+            item.AddRelatedLink(new PivotLink(null, "http://pauthor.codeplex.com"));
+            collection.Items.Add(item);
+
+            item = new PivotItem("1", collection);
+            item.AddFacetValues("alpha", "bravo");
+            item.AddRelatedLink(new PivotLink("charlie", null));
+            collection.Items.Add(item);
+
+            PivotCollectionBuffer buffer = new PivotCollectionBuffer(collection);
+            String targetPath = Path.Combine(WorkingDirectory, "sample.cxml");
+            LocalCxmlCollectionTarget target = new LocalCxmlCollectionTarget(targetPath);
+            target.Write(buffer);
+
+            AssertCxmlSchemaValid(targetPath);
+
+            CxmlCollectionSource targetAsSource = new CxmlCollectionSource(targetPath);
+            buffer.Write(targetAsSource);
+
+            AssertEqual("Related Link", buffer.Collection.Items[0].RelatedLinks.First().Title);
+            AssertEqual("http://pauthor.codeplex.com", buffer.Collection.Items[0].RelatedLinks.First().Url);
+            AssertEqual(0, buffer.Collection.Items[1].RelatedLinks.Count());
         }
     }
 }

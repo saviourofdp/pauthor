@@ -9,3 +9,4 @@ glob:Test/PauthorTestRunner/obj/*
 glob:bin/Pauthor.*
 glob:bin\PauthorLib.*
 glob:*.suo
+glob:*.csproj.user

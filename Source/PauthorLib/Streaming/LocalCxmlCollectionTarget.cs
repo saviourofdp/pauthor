@@ -281,9 +281,10 @@ namespace Microsoft.LiveLabs.Pauthor.Streaming
             xmlWriter.WriteStartElement("Related", PivotNamespace);
             foreach (PivotLink link in item.RelatedLinks)
             {
+                if (link.Url == null) continue;
                 xmlWriter.WriteStartElement("Link", PivotNamespace);
-                if (link.Title != null) xmlWriter.WriteAttributeString("Name", link.Title);
-                if (link.Url != null) xmlWriter.WriteAttributeString("Href", link.Url);
+                xmlWriter.WriteAttributeString("Name", link.Title ?? "Related Link");
+                xmlWriter.WriteAttributeString("Href", link.Url);
                 xmlWriter.WriteEndElement(); // Link
             }
             xmlWriter.WriteEndElement(); // Related

@@ -18,7 +18,17 @@ namespace Microsoft.LiveLabs.Pauthor.Test
         {
             AniseProgram program = new AniseProgram();
             program.LoadEmbeddedResource(typeof(PauthorTestRunner), "AniseConfig.adi");
-            program.AniseEngine.RunAllTests(System.Console.Out);
+            if (args.Length == 0)
+            {
+                program.AniseEngine.RunAllTests(System.Console.Out);
+            }
+            else
+            {
+                foreach (String test in args)
+                {
+                    program.AniseEngine.RunTest(System.Console.Out, test);
+                }
+            }
 
             System.Console.Out.WriteLine("\nPress enter to finish");
             System.Console.In.ReadLine();
