@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Crawling\UriUtilityUnitTests.cs" />
     <Compile Include="Imaging\HtmlImageCreatorUnitTest.cs" />
+    <Compile Include="Imaging\ImagesModuleTest.cs" />
     <Compile Include="PauthorUnitTest.cs" />
     <Compile Include="PauthorTestRunner.cs" />
     <Compile Include="Core\PivotCollectionUnitTest.cs" />

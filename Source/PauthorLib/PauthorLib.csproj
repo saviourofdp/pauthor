@@ -71,6 +71,7 @@
     <Compile Include="Crawling\UriUtility.cs" />
     <Compile Include="Crawling\XPathHelper.cs" />
     <Compile Include="Imaging\HtmlImageCreator.cs" />
+    <Compile Include="Imaging\Images.cs" />
     <Compile Include="Imaging\ImageCreator.cs" />
     <Compile Include="Imaging\ParallelDeepZoomCreator.cs" />
     <Compile Include="Imaging\UnDeepZoomImageCreator.cs" />

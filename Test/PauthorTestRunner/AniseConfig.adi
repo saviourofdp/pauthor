@@ -58,6 +58,12 @@ local-cxml-module-test = {
 ########################################################################################################################
 ## Module Tests
 
+#namespace Microsoft.LiveLabs.Pauthor.Test.Imaging
+
+images-module-test = {
+    _class = ImagesModuleTest;
+}
+
 #namespace Microsoft.LiveLabs.Pauthor.Test.Streaming.OleDb
 
 csv-collection-module-test = {
