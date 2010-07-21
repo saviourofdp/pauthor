@@ -250,6 +250,12 @@ namespace Microsoft.LiveLabs.Pauthor.Test
             Fail("Could not find \"" + pathInWorkingDirectory + "\" in working directory");
         }
 
+        public void AssertWithinTolerance(double expected, double tolerance, double actual)
+        {
+            AssertTrue(Math.Abs(expected - actual) <= tolerance,
+                "Expected " + expected + " (+/- " + tolerance +") but found " + actual);
+        }
+
         private StringWriter m_log;
     }
 }
