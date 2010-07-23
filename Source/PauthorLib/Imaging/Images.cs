@@ -57,8 +57,6 @@ namespace Microsoft.LiveLabs.Pauthor.Imaging
             Bitmap bitmapA = new Bitmap(imagePathA);
             Bitmap bitmapB = new Bitmap(imagePathB);
 
-            Bitmap output = new Bitmap(Math.Max(bitmapA.Width, bitmapB.Width), Math.Max(bitmapA.Height, bitmapB.Height));
-
             int maximumPixelCount = Math.Max(bitmapA.Height * bitmapA.Width, bitmapB.Height * bitmapB.Width);
             int desiredTestPixelCount = (int)(maximumPixelCount * sample);
             int testPixelCount = 0;
@@ -83,14 +81,7 @@ namespace Microsoft.LiveLabs.Pauthor.Imaging
                 bool blueMatches = Math.Abs(pixelA.B - pixelB.B) < colorTolerance;
                 bool pixelMatches = redMatches && greenMatches && blueMatches;
                 accuracyTotal += pixelMatches ? 1 : 0;
-
-                output.SetPixel((int) (output.Width * xPercent), (int) (output.Height * yPercent),
-                    pixelMatches ? Color.Green : Color.Red);
             }
-
-            String file = @"d:\codeplex\pauthor\test\pauthortestrunner\resources\images\output.png";
-            if (File.Exists(file)) File.Delete(file);
-            output.Save(file, ImageFormat.Png);
 
             return accuracyTotal / testPixelCount;
         }
