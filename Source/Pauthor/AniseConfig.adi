@@ -1,4 +1,4 @@
-﻿#
+#
 # Pauthor - An authoring library for Pivot collections
 # http://pauthor.codeplex.com
 #
@@ -39,6 +39,13 @@ input and output:
                converted into DeepZoom artifacts (i.e., DZC files, DZI files,
                and image pyramids). This is the only format which can be read
                directly by Pivot.
+
+output-only:
+
+	simplecxml	A collection formatted in a CXML file whose images are normal
+				images. The files are not copied locally and the image paths
+				are written verbatim. This lends itself to externally / web hosted
+				images. 
 
 For example, if you had a CSV file which you wanted to convert into a Pivot-
 readble collection, you would use the following command:
@@ -93,6 +100,16 @@ cxml-target = {
         }
     ];
 };
+
+simplecxml-target = {
+	_class = Kantar.DataSolutions.Pauthor.Streaming.Filters.SourceImageInPlaceTargetFilter;
+	_constructor = [
+        {
+            _class = Microsoft.LiveLabs.Pauthor.Streaming.LocalCxmlCollectionTarget;
+            _constructor = [ @args.target.1 ];
+        }
+    ];
+}
 
 deepzoom-target = {
     _class = Microsoft.LiveLabs.Pauthor.Streaming.Filters.DeepZoomTargetFilter;
