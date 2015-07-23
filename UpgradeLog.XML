@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Pauthor">
+</Property><Property Name="Solution File" Value="C:\Users\walkerp\Documents\GitHub\pauthor\Pauthor.sln">
+</Property><Property Name="Date" Value="23 July 2015">
+</Property><Property Name="Time" Value="09:59">
+</Property></Properties><Event ErrorLevel="0" Project="Pauthor" Source="Source\Pauthor\Pauthor.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Pauthor" Source="Source\Pauthor\Pauthor.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="PauthorLib" Source="Source\PauthorLib\PauthorLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="PauthorLib" Source="Source\PauthorLib\PauthorLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="PauthorTestRunner" Source="Test\PauthorTestRunner\PauthorTestRunner.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="PauthorTestRunner" Source="Test\PauthorTestRunner\PauthorTestRunner.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="RSS Crawler" Source="Sample Project - RSS Crawler\RSS Crawler.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="RSS Crawler" Source="Sample Project - RSS Crawler\RSS Crawler.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="Pauthor.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="Pauthor.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Pauthor" Source="Source\Pauthor\Pauthor.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="PauthorLib" Source="Source\PauthorLib\PauthorLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="PauthorTestRunner" Source="Test\PauthorTestRunner\PauthorTestRunner.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="RSS Crawler" Source="Sample Project - RSS Crawler\RSS Crawler.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
